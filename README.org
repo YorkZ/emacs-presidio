@@ -1,0 +1,51 @@
+* Emacs Integration for Placeholder Anonymizer using Presidio
+
+This package provides two interactive commands for anonymizing and deanonymizing
+text in Emacs using a Python-based Presidio workflow:
+
+- ~presidio-anonymize-region~
+- ~presidio-deanonymize-region~
+
+** Installation
+
+1. Place =presidio.el= (and the accompanying Python script) into a directory in your Emacs ~load-path~.
+2. Optionally, byte-compile =presidio.el= for faster load times.
+3. Install the necessary Python dependencies:
+   #+BEGIN_SRC bash
+   pip install presidio_analyzer presidio_anonymizer
+   python -m spacy download en_core_web_lg
+   #+END_SRC
+4. In your Emacs configuration (e.g., ~/.emacs or init.el), load the package:
+   #+BEGIN_SRC emacs-lisp
+   (require 'presidio)
+   #+END_SRC
+
+** Usage
+
+1. Write or open a buffer containing sensitive text.
+2. Select (mark) the region to anonymize, then run:
+   #+BEGIN_SRC emacs-lisp
+   M-x presidio-anonymize-region
+   #+END_SRC
+   The region will be replaced by placeholders, and a JSON file (specified by
+   =presidio-placeholder-mapping-file=) will be updated.
+3. If you externally revise the anonymized text (e.g., in an LLM), copy it back
+   into Emacs.
+4. Select the revised text, then run:
+   #+BEGIN_SRC emacs-lisp
+   M-x presidio-deanonymize-region
+   #+END_SRC
+   The placeholders will be replaced with the original sensitive data.
+
+** Customization
+
+- =presidio-script=: The *file name* of the Python script (default:
+  ~"presidio-placeholder-anonymizer"~). It is assumed to be in the *same
+  directory* as =presidio.el=.
+- =presidio-placeholder-mapping-file=: The file path for the JSON-based entity
+  mapping (defaults to =~/.cache/presidio_mapping.json=).
+
+** License
+
+Copyright © York Zhao. Distributed under the GNU General Public License,
+Version 3.
